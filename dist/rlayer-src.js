@@ -135,7 +135,6 @@ R.Pulse = R.Layer.extend({
 	},
 
 	projectLatLngs: function() {
-		console.log('R.Pulse.projectLatLngs()');
 		if(this._marker) this._marker.remove();
 		if(this._pulse) this._pulse.remove();
 
