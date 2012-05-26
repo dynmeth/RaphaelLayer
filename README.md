@@ -38,4 +38,5 @@ The build system borrows the same method from Leaflet and is powered by [Node.js
  ```
  npm install
  ```
+ 
  Once this has completed, just run `jake` inside the RaphaelLayer directory. This will check the source files for Javascript errors and inconsistencies, and then combine and compress it to the `dist` folder.
