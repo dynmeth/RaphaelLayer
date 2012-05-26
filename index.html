@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <title>RaphaelLayer by dynmeth</title>
+    <title>RaphaelLayer by Dynamic Methods Pty Ltd</title>
 
     <link rel="stylesheet" href="stylesheets/styles.css">
     <link rel="stylesheet" href="stylesheets/pygment_trac.css">
@@ -11,6 +11,15 @@
     <!--[if lt IE 9]>
     <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
     <![endif]-->
+
+    <link rel="stylesheet" href="libs/leaflet/leaflet.css" />
+    <!--[if lte IE 8]>
+        <link rel="stylesheet" href="libs/leaflet/leaflet.ie.css" />
+    <![endif]-->
+
+    <script src="libs/leaflet/leaflet.js"></script>
+    <script src="libs/raphael/raphael-min.js"></script>
+    <script src="https://raw.github.com/dynmeth/RaphaelLayer/master/dist/rlayer.js"></script>
   </head>
   <body>
     <div class="wrapper">
@@ -58,7 +67,8 @@
 
 <h2>Examples</h2>
 
-<p>There are some examples in the <code>debug</code> folder.</p>
+<div id="map" style="width: 596px; height: 300px; border: 2px solid black"></div>
+<p>Click somewhere on the map. There are some examples in the <code>debug</code> folder.</p>
 
 <h2>Building</h2>
 
@@ -92,6 +102,6 @@
             pageTracker._trackPageview();
             } catch(err) {}
           </script>
-
+          <script src="javascripts/index.js"></script>
   </body>
 </html>
