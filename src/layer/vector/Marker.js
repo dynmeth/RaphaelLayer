@@ -8,6 +8,8 @@ R.Marker = R.Layer.extend({
 	},
 
 	onRemove: function (map) {
+		R.Layer.prototype.onRemove.call(this, map);
+
 		if(this._path) this._path.remove();
 	},
 

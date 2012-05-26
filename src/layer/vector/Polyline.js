@@ -6,6 +6,12 @@ R.Polyline = R.Layer.extend({
 		this._attr = attr || {'fill': '#000', 'stroke': '#000'};
 	},
 
+	onRemove: function(map) {
+		R.Layer.prototype.onRemove.call(this, map);
+		
+		if(this._path) this._path.remove();
+	},
+
 	projectLatLngs: function() {	
 		if (this._path) this._path.remove();
 		

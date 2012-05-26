@@ -34,7 +34,8 @@ R.Layer = L.Class.extend({
 	},
 
 	onRemove: function(map) {
-		
+		map.off('viewreset', this.projectLatLngs, this);
+		this._map = null;
 	},
 
 	projectLatLngs: function() {
@@ -94,6 +95,8 @@ R.Marker = R.Layer.extend({
 	},
 
 	onRemove: function (map) {
+		R.Layer.prototype.onRemove.call(this, map);
+
 		if(this._path) this._path.remove();
 	},
 
@@ -125,11 +128,14 @@ R.Pulse = R.Layer.extend({
 	},
 
 	onRemove: function (map) {
+		R.Layer.prototype.onRemove.call(this, map);
+
 		if(this._marker) this._marker.remove();		
 		if(this._pulse) this._pulse.remove();
 	},
 
 	projectLatLngs: function() {
+		console.log('R.Pulse.projectLatLngs()');
 		if(this._marker) this._marker.remove();
 		if(this._pulse) this._pulse.remove();
 
@@ -153,6 +159,12 @@ R.Polyline = R.Layer.extend({
 
 		this._latlngs = latlngs;
 		this._attr = attr || {'fill': '#000', 'stroke': '#000'};
+	},
+
+	onRemove: function(map) {
+		R.Layer.prototype.onRemove.call(this, map);
+		
+		if(this._path) this._path.remove();
 	},
 
 	projectLatLngs: function() {	
@@ -181,6 +193,8 @@ R.Bezier = R.Layer.extend({
 	},
 
 	onRemove: function (map) {
+		R.Layer.prototype.onRemove.call(this, map);
+		
 		if(this._path) this._path.remove();
 	},
 

@@ -13,7 +13,8 @@ R.Layer = L.Class.extend({
 	},
 
 	onRemove: function(map) {
-		
+		map.off('viewreset', this.projectLatLngs, this);
+		this._map = null;
 	},
 
 	projectLatLngs: function() {

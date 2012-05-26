@@ -13,11 +13,14 @@ R.Pulse = R.Layer.extend({
 	},
 
 	onRemove: function (map) {
+		R.Layer.prototype.onRemove.call(this, map);
+
 		if(this._marker) this._marker.remove();		
 		if(this._pulse) this._pulse.remove();
 	},
 
 	projectLatLngs: function() {
+		console.log('R.Pulse.projectLatLngs()');
 		if(this._marker) this._marker.remove();
 		if(this._pulse) this._pulse.remove();
 
