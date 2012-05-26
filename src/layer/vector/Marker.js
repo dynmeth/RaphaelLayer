@@ -7,13 +7,17 @@ R.Marker = R.Layer.extend({
 		this._attr = (typeof pathString == 'object' ? pathString : (attr ? attr : {'fill': '#000'}));
 	},
 
+	onRemove: function (map) {
+		if(this._path) this._path.remove();
+	},
+
 	projectLatLngs: function() {		
-		if (this.path) this.path.remove();
+		if (this._path) this._path.remove();
 
 		var p = this._map.latLngToLayerPoint(this._latlng);
 		var r = Raphael.pathBBox(this._pathString);
 		
-		this.path = this._paper.path(this._pathString)
+		this._path = this._paper.path(this._pathString)
 			.attr(this._attr)
 			.translate(p.x - 1.05*r.width, p.y - 1.15*r.height)
 			.toFront();

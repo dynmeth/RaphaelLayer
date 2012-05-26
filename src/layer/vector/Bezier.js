@@ -8,8 +8,6 @@ R.Bezier = R.Layer.extend({
 
 	onRemove: function (map) {
 		if(this._path) this._path.remove();
-
-		L.Layer.prototype.onRemove.call(this, map);
 	},
 
 	projectLatLngs: function() {
