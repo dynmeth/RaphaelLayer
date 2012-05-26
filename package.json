@@ -1,0 +1,15 @@
+{
+  "author": "David Howell <david@dynamicmethods.com.au>",
+  "name": "RaphaelLayer",
+  "description": "Raphael vector layer for Leaflet maps",
+  "version": "0.1.0",
+  "repository": {
+    "url": ""
+  },
+  "engines": {
+    "node": "~0.6.11"
+  },
+  "dependencies": {},
+  "devDependencies": {},
+  "optionalDependencies": {}
+}
