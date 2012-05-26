@@ -4,12 +4,20 @@
   "description": "Raphael vector layer for Leaflet maps",
   "version": "0.1.0",
   "repository": {
-    "url": ""
+    "type": "git",
+    "url": "https://github.com/dynmeth/RaphaelLayer"
   },
   "engines": {
     "node": "~0.6.11"
   },
-  "dependencies": {},
+  "dependencies": {
+    "jake": "0.2.x",
+    "jshint": "0.7.x",
+    "uglify-js": "1.2.x"
+  },
   "devDependencies": {},
-  "optionalDependencies": {}
+  "optionalDependencies": {},
+  "licenses": 
+   { "type": "MIT",
+     "url": "http://www.opensource.org/licenses/mit-license.php" },
 }
