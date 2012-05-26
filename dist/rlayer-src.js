@@ -17,7 +17,7 @@ if (typeof exports != 'undefined') {
 	window.R = R;
 }
 
-R.version = '0.1';
+R.version = '0.1.0';
 
 R.Layer = L.Class.extend({
 	initialize: function(options) {
@@ -93,13 +93,17 @@ R.Marker = R.Layer.extend({
 		this._attr = (typeof pathString == 'object' ? pathString : (attr ? attr : {'fill': '#000'}));
 	},
 
+	onRemove: function (map) {
+		if(this._path) this._path.remove();
+	},
+
 	projectLatLngs: function() {		
-		if (this.path) this.path.remove();
+		if (this._path) this._path.remove();
 
 		var p = this._map.latLngToLayerPoint(this._latlng);
 		var r = Raphael.pathBBox(this._pathString);
 		
-		this.path = this._paper.path(this._pathString)
+		this._path = this._paper.path(this._pathString)
 			.attr(this._attr)
 			.translate(p.x - 1.05*r.width, p.y - 1.15*r.height)
 			.toFront();
@@ -109,7 +113,7 @@ R.Marker = R.Layer.extend({
 R.Pulse = R.Layer.extend({
 	initialize: function(latlng, radius, attr, pulseAttr, options) {
 		R.Layer.prototype.initialize.call(this, options);
-		console.log(pulseAttr);
+
 		this._latlng = latlng;
 		this._radius = (typeof radius == 'number' ? radius : 6);
 		this._attr = (typeof radius == 'object' ? radius : (typeof attr == 'object' ? attr : {'fill': '#30a3ec', 'stroke': '#30a3ec'}));
@@ -121,29 +125,25 @@ R.Pulse = R.Layer.extend({
 	},
 
 	onRemove: function (map) {
-		if(this.marker) this.marker.remove();		
-		if(this.pulse) this.marker.remove();
-
-		R.Layer.prototype.onRemove.call(this, map);
+		if(this._marker) this._marker.remove();		
+		if(this._pulse) this._pulse.remove();
 	},
 
 	projectLatLngs: function() {
-		var self = this;
-
-		if(this.marker) this.marker.remove();
-		if(this.pulse) this.pulse.remove();
+		if(this._marker) this._marker.remove();
+		if(this._pulse) this._pulse.remove();
 
 		var p = this._map.latLngToLayerPoint(this._latlng);
 
-		this.marker = this._paper.circle(p.x, p.y, this._radius).attr(this._attr);
-		this.pulse = this._paper.circle(p.x, p.y, this._radius).attr(this._pulseAttr);
+		this._marker = this._paper.circle(p.x, p.y, this._radius).attr(this._attr);
+		this._pulse = this._paper.circle(p.x, p.y, this._radius).attr(this._pulseAttr);
 
 		var anim = Raphael.animation({
 						'0%': {transform: 's0.3', opacity: 1.0},
 						'100%': {transform: 's3.0', opacity: 0.0, easing: '<'} //, callback: anim}
 					}, 1000);
 
-		this.pulse.animate(anim.repeat(this._repeat));
+		this._pulse.animate(anim.repeat(this._repeat));
 	}
 });
 
@@ -182,8 +182,6 @@ R.Bezier = R.Layer.extend({
 
 	onRemove: function (map) {
 		if(this._path) this._path.remove();
-
-		L.Layer.prototype.onRemove.call(this, map);
 	},
 
 	projectLatLngs: function() {
