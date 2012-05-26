@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <title>RaphaelLayer by dynmeth</title>
+
+    <link rel="stylesheet" href="stylesheets/styles.css">
+    <link rel="stylesheet" href="stylesheets/pygment_trac.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no">
+    <!--[if lt IE 9]>
+    <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+  </head>
+  <body>
+    <div class="wrapper">
+      <header>
+        <h1>RaphaelLayer</h1>
+        <p>Raphael overlay for Leaflet maps</p>
+        <p class="view"><a href="https://github.com/dynmeth/RaphaelLayer">View the Project on GitHub <small>dynmeth/RaphaelLayer</small></a></p>
+        <ul>
+          <li><a href="https://github.com/dynmeth/RaphaelLayer/zipball/master">Download <strong>ZIP File</strong></a></li>
+          <li><a href="https://github.com/dynmeth/RaphaelLayer/tarball/master">Download <strong>TAR Ball</strong></a></li>
+          <li><a href="https://github.com/dynmeth/RaphaelLayer">View On <strong>GitHub</strong></a></li>
+        </ul>
+      </header>
+      <section>
+        <h1>RaphaelLayer</h1>
+
+<p>RaphaelLayer is the combination of <a href="http://leaflet.cloudmade.com">Leaflet</a> and <a href="http://raphaeljs.com">Raphael</a> to allow a Raphael's <code>paper</code> object to overlay a Leaflet's <code>map</code> object.</p>
+
+<h2>Why? Leaflet already has an SVG layer.</h2>
+
+<p><a href="http://raphaeljs.com">Raphael</a> is great for handling SVG animations. <a href="http://leaflet.cloudmade.com">Leaflet</a> is great for custom mapping. By combining Raphael's animations with Leaflet's mapping, you can produce some powerful visualisations.</p>
+
+<p>Leaflet's Path SVG layer is good, however it is difficult to do advanced animations with it.</p>
+
+<h2>Dependencies</h2>
+
+<p>RaphaelLayer has two dependencies:</p>
+
+<ol>
+<li><a href="http://raphaeljs.com">Raphael</a></li>
+<li><a href="http://leaflet.cloudmade.com">Leaflet</a></li>
+</ol><h2>Using</h2>
+
+<p>If you don't need to modify/build any changes into RaphaelLayer, just download and include the <code>dist/rlayer.js</code>.</p>
+
+<p>We've followed the naming convention of Leaflet by using the prefix <code>R.</code>. For example, to use RaphaelLayer's Marker just add a new layer as you would normally:</p>
+
+<pre><code>map.addLayer(new R.Marker(latlng));
+</code></pre>
+
+<p>To modify the marker's attributes, such as fill, stroke etc, just pass regular <a href="http://raphaeljs.com/reference.html#Element.attr">Raphael style attributes</a> through like this:</p>
+
+<pre><code>map.addLayer(new R.Marker(latlng, {'fill': '#fff', 'stroke': '#000'));
+</code></pre>
+
+<h2>Examples</h2>
+
+<p>There are some examples in the <code>debug</code> folder.</p>
+
+<h2>Building</h2>
+
+<p>The build system borrows the same method from Leaflet and is powered by <a href="http://nodejs.org">Node.js</a>, <a href="https://github.com/mde/jake">Jake</a>, <a href="http://github.com/jshint/node-jshint">JSHint</a> and <a href="https://github.com/mishoo/UglifyJS">UglifyJS</a>. The easiest way to install it:</p>
+
+<ol>
+<li><a href="http://nodejs.org">Download and install Node</a></li>
+<li>
+<p>Run the following commands in the command line:</p>
+
+<pre><code>npm install
+</code></pre>
+
+<p>Once this has completed, just run <code>jake</code> inside the RaphaelLayer directory. This will check the source files for Javascript errors and inconsistencies, and then combine and compress it to the <code>dist</code> folder.</p>
+</li>
+</ol>
+      </section>
+      <footer>
+        <p>This project is maintained by <a href="https://github.com/dynmeth">dynmeth</a></p>
+        <p><small>Hosted on GitHub Pages &mdash; Theme by <a href="https://github.com/orderedlist">orderedlist</a></small></p>
+      </footer>
+    </div>
+    <script src="javascripts/scale.fix.js"></script>
+              <script type="text/javascript">
+            var gaJsHost = (("https:" == document.location.protocol) ? "https://ssl." : "http://www.");
+            document.write(unescape("%3Cscript src='" + gaJsHost + "google-analytics.com/ga.js' type='text/javascript'%3E%3C/script%3E"));
+          </script>
+          <script type="text/javascript">
+            try {
+              var pageTracker = _gat._getTracker("UA-1403514-4");
+            pageTracker._trackPageview();
+            } catch(err) {}
+          </script>
+
+  </body>
+</html>
