@@ -32,6 +32,12 @@ var deps = {
 		src: ['layer/vector/Bezier.js'],
 		deps: ['Layer'],
 		desc: 'Quadratic bezier line.'
+	},
+
+	BezierAnim: {
+		src: ['layer/vector/BezierAnim.js'],
+		deps: ['Layer'],
+		desc: 'Quadratic bezier line animated.'
 	}
 };
 

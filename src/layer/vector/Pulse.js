@@ -30,7 +30,7 @@ R.Pulse = R.Layer.extend({
 
 		var anim = Raphael.animation({
 						'0%': {transform: 's0.3', opacity: 1.0},
-						'100%': {transform: 's3.0', opacity: 0.0, easing: '<'} //, callback: anim}
+						'100%': {transform: 's3.0', opacity: 0.0, easing: '<'}
 					}, 1000);
 
 		this._pulse.animate(anim.repeat(this._repeat));

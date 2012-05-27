@@ -16,15 +16,19 @@
 	}, 5000);
 
 	map.on('click', function(e) {
-		var b = new R.Bezier([adelaide, e.latlng], {'stroke': '#f00', 'stroke-width': 3});
-		var p = new R.Pulse(e.latlng, {'stroke': '#2478ad', 'fill': '#30a3ec'}, {'stroke': '#30a3ec', 'stroke-width': 3});
+		var b = new R.BezierAnim([adelaide, e.latlng], {}, function() {
+			var p = new R.Pulse(
+					e.latlng, 
+					6,
+					{'stroke': '#2478ad', 'fill': '#30a3ec'}, 
+					{'stroke': '#30a3ec', 'stroke-width': 3});
 
+			map.addLayer(p);
+			setTimeout(function() {
+				map.removeLayer(b).removeLayer(p);
+			}, 3000);
+		});
+		
 		map.addLayer(b);
-		map.addLayer(p);
-
-		setTimeout(function() {
-			map.removeLayer(b);
-			map.removeLayer(p);
-		}, 3000);
 	});
 })();

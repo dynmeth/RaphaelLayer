@@ -35,8 +35,8 @@ The build system borrows the same method from Leaflet and is powered by [Node.js
  1. [Download and install Node](http://nodejs.org)
  2. Run the following commands in the command line:
  
- ```
- npm install
- ```
+```
+npm install
+```
  
 Once this has completed, just run `jake` inside the RaphaelLayer directory. This will check the source files for Javascript errors and inconsistencies, and then combine and compress it to the `dist` folder.
