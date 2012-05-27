@@ -251,7 +251,8 @@ R.BezierAnim = R.Layer.extend({
 		if(this._path) this._path.remove();
 		if(this._sub) this._sub.remove();
 		
-		var start = this._map.latLngToLayerPoint(this._latlngs[0]),
+		var self = this,
+			start = this._map.latLngToLayerPoint(this._latlngs[0]),
 			end = this._map.latLngToLayerPoint(this._latlngs[1]),
 			cp = this.getControlPoint(start, end),
 			pathString = 'M' + start.x + ' ' + start.y + 'Q' + cp.x + ' ' + cp.y + ' ' + end.x + ' ' + end.y,
@@ -262,20 +263,34 @@ R.BezierAnim = R.Layer.extend({
 
 		this._paper.customAttributes.alongBezier = function(a) {
 			return {
-				path: line.getSubpath(0, a*len)
+				path: this.data('bezierPath').getSubpath(0, a*this.data('pathLength'))
 			};
 		};
 
-		this._sub = this._paper.path()
+		this._paper.customAttributes.alongBezierRev = function(a) {
+			return {
+				path: this.data('bezierPath').getSubpath(a*this.data('pathLength'), this.data('pathLength'))
+			};
+		};
+
+		var sub = this._sub = this._paper.path()
+			.data('bezierPath', line)
+			.data('pathLength', line.getTotalLength())
 			.attr({
 				'stroke': '#f00',
 				'alongBezier': 0,
+				'alongBezierRev': 0,
 				'stroke-width': 3
 			});
 
-		this._sub.stop().animate({
+		sub.stop().animate({
 			alongBezier: 1
-		}, 500, this._cb);
+		}, 500, function() {
+			self._cb();
+			sub.stop().animate({
+				alongBezierRev: 0.99
+			}, 500, function() { sub.remove(); });
+		});
 	},
 
 	getControlPoint: function(start, end) {
