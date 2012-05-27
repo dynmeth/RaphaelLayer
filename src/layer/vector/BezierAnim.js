@@ -23,30 +23,24 @@ R.BezierAnim = R.Layer.extend({
 			end = this._map.latLngToLayerPoint(this._latlngs[1]),
 			cp = this.getControlPoint(start, end),
 			pathString = 'M' + start.x + ' ' + start.y + 'Q' + cp.x + ' ' + cp.y + ' ' + end.x + ' ' + end.y,
-			line = this._paper.path(pathString),
-			len = line.getTotalLength();
-
-		this._path = line.attr({'opacity': 0});
+			line = this._paper.path(pathString).hide();
 
 		this._paper.customAttributes.alongBezier = function(a) {
-			return {
-				path: this.data('bezierPath').getSubpath(0, a*this.data('pathLength'))
-			};
-		};
+			var r = this.data('reverse');
+			var len = this.data('pathLength');
 
-		this._paper.customAttributes.alongBezierRev = function(a) {
 			return {
-				path: this.data('bezierPath').getSubpath(a*this.data('pathLength'), this.data('pathLength'))
+				path: this.data('bezierPath').getSubpath(r ? (1-a)*len : 0, r ? len : a*len)
 			};
 		};
 
 		var sub = this._sub = this._paper.path()
 			.data('bezierPath', line)
 			.data('pathLength', line.getTotalLength())
+			.data('reverse', false)
 			.attr({
 				'stroke': '#f00',
 				'alongBezier': 0,
-				'alongBezierRev': 0,
 				'stroke-width': 3
 			});
 
@@ -54,8 +48,9 @@ R.BezierAnim = R.Layer.extend({
 			alongBezier: 1
 		}, 500, function() {
 			self._cb();
+			sub.data('reverse', true);
 			sub.stop().animate({
-				alongBezierRev: 0.99
+				'alongBezier': 0
 			}, 500, function() { sub.remove(); });
 		});
 	},
