@@ -15,7 +15,17 @@
 		map.removeLayer(m);
 	}, 5000);
 
+	var points = [];
+
 	map.on('click', function(e) {
+		points.push(e.latlng);
+
+		if(points.length == 4) {
+			map.addLayer(new R.PolygonGlow(points));
+
+			points.length = 0;
+		}
+
 		var b = new R.BezierAnim([adelaide, e.latlng], {}, function() {
 			var p = new R.Pulse(
 					e.latlng, 

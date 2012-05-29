@@ -28,6 +28,18 @@ var deps = {
 		desc: 'Straight lines connecting n latlngs.'
 	},
 
+	Polygon: {
+		src: ['layer/vector/Polygon.js'],
+		deps: ['Layer'],
+		desc: 'Straight lines connecting n latlngs and closing the last latlng with the first.'
+	},
+
+	PolygonGlow: {
+		src: ['layer/vector/PolygonGlow.js'],
+		deps: ['Layer'],
+		desc: 'Straight lines connecting n latlngs and closing the last latlng with the first with \'glowing\' animation.'
+	},
+
 	Bezier: {
 		src: ['layer/vector/Bezier.js'],
 		deps: ['Layer'],
