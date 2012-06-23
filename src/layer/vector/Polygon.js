@@ -1,9 +1,17 @@
 R.Polygon = R.Layer.extend({
+	includes: L.Mixin.Events,
+	
 	initialize: function(latlngs, attr, options) {
 		R.Layer.prototype.initialize.call(this, options);
 
+		if(latlngs.length == 1) {
+			if(latlngs[0] instanceof Array) {
+				latlngs = latlngs[0];
+			}
+		}
+
 		this._latlngs = latlngs;
-		this._attr = attr || {'fill': 'rgba(255, 0, 0, 0.5)', 'stroke': '#f00', 'stroke-width': 3};
+		this._attr = attr || {'fill': 'rgba(255, 0, 0, 0.5)', 'stroke': '#f00', 'stroke-width': 2};
 	},
 
 	onRemove: function(map) {
