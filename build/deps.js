@@ -50,6 +50,18 @@ var deps = {
 		src: ['layer/vector/BezierAnim.js'],
 		deps: ['Layer'],
 		desc: 'Quadratic bezier line animated.'
+	},
+
+	MultiPoly: {
+		src: ['layer/vector/MultiPoly.js'],
+		deps: ['Layer', 'PolyLine', 'Polygon'],
+		desc: 'Groups for GeoJSON objects.'
+	},
+
+	GeoJSON: {
+		src: ['layer/vector/GeoJSON.js'],
+		deps: ['MultiPoly'],
+		desc: 'GeoJSON parser to layer groups.'
 	}
 };
 
