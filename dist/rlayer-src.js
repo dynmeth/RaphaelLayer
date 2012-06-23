@@ -153,6 +153,8 @@ R.Pulse = R.Layer.extend({
 });
 
 R.Polyline = R.Layer.extend({
+	includes: L.Mixin.Events,
+	
 	initialize: function(latlngs, attr, options) {
 		R.Layer.prototype.initialize.call(this, options);
 
@@ -184,11 +186,19 @@ R.Polyline = R.Layer.extend({
 });
 
 R.Polygon = R.Layer.extend({
+	includes: L.Mixin.Events,
+	
 	initialize: function(latlngs, attr, options) {
 		R.Layer.prototype.initialize.call(this, options);
 
+		if(latlngs.length == 1) {
+			if(latlngs[0] instanceof Array) {
+				latlngs = latlngs[0];
+			}
+		}
+
 		this._latlngs = latlngs;
-		this._attr = attr || {'fill': 'rgba(255, 0, 0, 0.5)', 'stroke': '#f00', 'stroke-width': 3};
+		this._attr = attr || {'fill': 'rgba(255, 0, 0, 0.5)', 'stroke': '#f00', 'stroke-width': 2};
 	},
 
 	onRemove: function(map) {
@@ -216,7 +226,7 @@ R.Polygon = R.Layer.extend({
 	}
 });
 
-R.PolygonAnim = R.Layer.extend({
+R.PolygonGlow = R.Layer.extend({
 	initialize: function(latlngs, attr, options) {
 		R.Layer.prototype.initialize.call(this, options);
 
@@ -389,6 +399,153 @@ R.BezierAnim = R.Layer.extend({
 	closeTo: function(a, b) {
 		var t = 15;
   		return (a - b > -t && a - b < t);
+	}
+});
+
+/*
+ * Contains L.MultiPolyline and L.MultiPolygon layers.
+ */
+
+(function () {
+	function createMulti(Klass) {
+		return L.FeatureGroup.extend({
+			initialize: function (latlngs, options) {
+				this._layers = {};
+				this._options = options;
+				this.setLatLngs(latlngs);
+			},
+
+			setLatLngs: function (latlngs) {
+				var i = 0, len = latlngs.length;
+
+				this._iterateLayers(function (layer) {
+					if (i < len) {
+						layer.setLatLngs(latlngs[i++]);
+					} else {
+						this.removeLayer(layer);
+					}
+				}, this);
+
+				while (i < len) {
+					this.addLayer(new Klass(latlngs[i++], this._options));
+				}
+
+				return this;
+			}
+		});
+	}
+
+	R.MultiPolyline = createMulti(R.Polyline);
+	R.MultiPolygon = createMulti(R.Polygon);
+}());
+
+R.GeoJSON = L.FeatureGroup.extend({
+	initialize: function (geojson, options) {
+		L.Util.setOptions(this, options);
+
+		this._geojson = geojson;
+		this._layers = {};
+
+		if (geojson) {
+			this.addGeoJSON(geojson);
+		}
+	},
+
+	addGeoJSON: function (geojson) {
+		var features = geojson.features,
+		    i, len;
+
+		if (features) {
+			for (i = 0, len = features.length; i < len; i++) {
+				this.addGeoJSON(features[i]);
+			}
+			return;
+		}
+
+		var isFeature = (geojson.type === 'Feature'),
+		    geometry = isFeature ? geojson.geometry : geojson,
+		    layer = R.GeoJSON.geometryToLayer(geometry, this.options.pointToLayer);
+
+		this.fire('featureparse', {
+			layer: layer,
+			properties: geojson.properties,
+			geometryType: geometry.type,
+			bbox: geojson.bbox,
+			id: geojson.id,
+			geometry: geojson.geometry
+		});
+
+		this.addLayer(layer);
+	}
+});
+
+L.Util.extend(R.GeoJSON, {
+	geometryToLayer: function (geometry, pointToLayer) {
+		var coords = geometry.coordinates,
+		    layers = [],
+		    latlng, latlngs, i, len, layer;
+
+		switch (geometry.type) {
+		case 'Point':
+			latlng = this.coordsToLatLng(coords);
+			return pointToLayer ? pointToLayer(latlng) : new R.Marker(latlng);
+
+		case 'MultiPoint':
+			for (i = 0, len = coords.length; i < len; i++) {
+				latlng = this.coordsToLatLng(coords[i]);
+				layer = pointToLayer ? pointToLayer(latlng) : new R.Marker(latlng);
+				layers.push(layer);
+			}
+			return new L.FeatureGroup(layers);
+
+		case 'LineString':
+			latlngs = this.coordsToLatLngs(coords);
+			return new R.Polyline(latlngs);
+
+		case 'Polygon':
+			latlngs = this.coordsToLatLngs(coords, 1);
+			return new R.Polygon(latlngs);
+
+		case 'MultiLineString':
+			latlngs = this.coordsToLatLngs(coords, 1);
+			return new R.MultiPolyline(latlngs);
+
+		case "MultiPolygon":
+			latlngs = this.coordsToLatLngs(coords, 2);
+			return new R.MultiPolygon(latlngs);
+
+		case "GeometryCollection":
+			for (i = 0, len = geometry.geometries.length; i < len; i++) {
+				layer = this.geometryToLayer(geometry.geometries[i], pointToLayer);
+				layers.push(layer);
+			}
+			return new L.FeatureGroup(layers);
+
+		default:
+			throw new Error('Invalid GeoJSON object.');
+		}
+	},
+
+	coordsToLatLng: function (coords, reverse) { // (Array, Boolean) -> LatLng
+		var lat = parseFloat(coords[reverse ? 0 : 1]),
+		    lng = parseFloat(coords[reverse ? 1 : 0]);
+
+		return new L.LatLng(lat, lng, true);
+	},
+
+	coordsToLatLngs: function (coords, levelsDeep, reverse) { // (Array, Number, Boolean) -> Array
+		var latlng,
+		    latlngs = [],
+		    i, len;
+
+		for (i = 0, len = coords.length; i < len; i++) {
+			latlng = levelsDeep ?
+					this.coordsToLatLngs(coords[i], levelsDeep - 1, reverse) :
+					this.coordsToLatLng(coords[i], reverse);
+			latlngs.push(latlng);
+		}
+
+		return latlngs;
 	}
 });
 
