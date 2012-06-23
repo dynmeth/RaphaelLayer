@@ -41,4 +41,8 @@
 		
 		map.addLayer(b);
 	});
+
+	var geo = new R.GeoJSON(multi_geo);
+
+	map.addLayer(geo);
 })();
