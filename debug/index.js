@@ -21,10 +21,20 @@
 		points.push(e.latlng);
 
 		if(points.length == 4) {
-			map.addLayer(new R.PolygonGlow(points));
+			var p = new R.Polygon(points);
+			map.addLayer(p);
+			p.hover(function() {
 
-			points.length = 0;
+			},
+			function() {
+				console.log('out');
+				p.animate({opacity: 0}, 1000, function() {map.removeLayer(p); console.log('done') });
+
+			});
+
+			points = [];
 		}
+
 
 		var b = new R.BezierAnim([adelaide, e.latlng], {}, function() {
 			var p = new R.Pulse(
@@ -40,9 +50,24 @@
 		});
 		
 		map.addLayer(b);
+		
 	});
 
 	var geo = new R.GeoJSON(multi_geo);
 
 	map.addLayer(geo);
+	geo.hover(
+		function() { 
+
+		}, 
+		function() { 
+			geo.animate(
+				{opacity: 0}, 
+				1000, 
+				function() { 
+
+				})}, 
+			geo, 
+			geo);
+
 })();
