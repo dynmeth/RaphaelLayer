@@ -1,10 +1,10 @@
-R.GeoJSON = L.FeatureGroup.extend({
+R.GeoJSON = R.FeatureGroup.extend({
 	initialize: function (geojson, options) {
 		L.Util.setOptions(this, options);
 
 		this._geojson = geojson;
 		this._layers = {};
-
+		
 		if (geojson) {
 			this.addGeoJSON(geojson);
 		}
@@ -55,7 +55,7 @@ L.Util.extend(R.GeoJSON, {
 				layer = pointToLayer ? pointToLayer(latlng) : new R.Marker(latlng);
 				layers.push(layer);
 			}
-			return new L.FeatureGroup(layers);
+			return new R.FeatureGroup(layers);
 
 		case 'LineString':
 			latlngs = this.coordsToLatLngs(coords);
@@ -78,7 +78,7 @@ L.Util.extend(R.GeoJSON, {
 				layer = this.geometryToLayer(geometry.geometries[i], pointToLayer);
 				layers.push(layer);
 			}
-			return new L.FeatureGroup(layers);
+			return new R.FeatureGroup(layers);
 
 		default:
 			throw new Error('Invalid GeoJSON object.');

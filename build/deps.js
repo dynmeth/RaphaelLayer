@@ -52,9 +52,15 @@ var deps = {
 		desc: 'Quadratic bezier line animated.'
 	},
 
+	FeatureGroup: {
+		src: ['layer/FeatureGroup.js'],
+		deps: ['Layer'],
+		desc: 'Extended L.FeatureGroup'
+	},
+	
 	MultiPoly: {
 		src: ['layer/vector/MultiPoly.js'],
-		deps: ['Layer', 'PolyLine', 'Polygon'],
+		deps: ['Layer', 'PolyLine', 'Polygon', 'FeatureGroup'],
 		desc: 'Groups for GeoJSON objects.'
 	},
 

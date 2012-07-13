@@ -4,7 +4,7 @@
 
 (function () {
 	function createMulti(Klass) {
-		return L.FeatureGroup.extend({
+		return R.FeatureGroup.extend({
 			initialize: function (latlngs, options) {
 				this._layers = {};
 				this._options = options;
