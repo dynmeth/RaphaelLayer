@@ -17,7 +17,7 @@ if (typeof exports != 'undefined') {
 	window.R = R;
 }
 
-R.version = '0.1.0';
+R.version = '0.1.1';
 
 R.Layer = L.Class.extend({
 	initialize: function(options) {
@@ -28,7 +28,8 @@ R.Layer = L.Class.extend({
 		this._map = map;
 		this._map._initRaphaelRoot();
 		this._paper = this._map._paper;
-
+		this._set = this._paper.set();
+		
 		map.on('viewreset', this.projectLatLngs, this);
 		this.projectLatLngs();
 	},
@@ -36,19 +37,39 @@ R.Layer = L.Class.extend({
 	onRemove: function(map) {
 		map.off('viewreset', this.projectLatLngs, this);
 		this._map = null;
+		this._set.forEach(function(item) {
+			item.remove();
+		}, this);
+		this._set.clear();
 	},
 
 	projectLatLngs: function() {
 		
+	},
+
+	animate: function(attr, ms, easing, callback) {
+		this._set.animate(attr, ms, easing, callback);
+	
+		return this;
+	},
+
+	hover: function(f_in, f_out, icontext, ocontext) {
+		this._set.hover(f_in, f_out, icontext, ocontext);
+
+		return this;
+	},
+
+	attr: function(name, value) {
+		this._set.attr(name, value);
+
+		return this;
 	}
 });
 
 L.Map.include({
 	_initRaphaelRoot: function () {
 		if (!this._raphaelRoot) {
-			this._raphaelRoot = document.createElement('div');
-			this._raphaelRoot.className = 'leaflet-raphael-pane';
-			this._panes.overlayPane.appendChild(this._raphaelRoot);
+			this._raphaelRoot = this._panes.overlayPane;
 			this._paper = Raphael(this._raphaelRoot);
 
 			this.on('moveend', this._updateRaphaelViewport);
@@ -57,7 +78,7 @@ L.Map.include({
 	},
 
 	_updateRaphaelViewport: function () {
-		var	p = 0.5,
+		var	p = 0.02,
 			size = this.getSize(),
 			panePos = L.DomUtil.getPosition(this._mapPane),
 			min = panePos.multiplyBy(-1)._subtract(size.multiplyBy(p)),
@@ -67,21 +88,15 @@ L.Map.include({
 			root = this._raphaelRoot,
 			pane = this._panes.overlayPane;
 
-		if (L.Browser.webkit) {
-			pane.removeChild(root);
-		}
-
 		this._paper.setSize(width, height);
 		
 		L.DomUtil.setPosition(root, min);
+
 		root.setAttribute('width', width);
 		root.setAttribute('height', height);
-
-		if (L.Browser.webkit) {
-			this._paper.setViewBox(min.x, min.y, width, height);
-
-			pane.appendChild(root);
-		}
+		
+		this._paper.setViewBox(min.x, min.y, width, height, false);
+		
 	}
 });
 
@@ -162,18 +177,15 @@ R.Polyline = R.Layer.extend({
 		this._attr = attr || {'fill': '#000', 'stroke': '#000'};
 	},
 
-	onRemove: function(map) {
-		R.Layer.prototype.onRemove.call(this, map);
-		
-		if(this._path) this._path.remove();
-	},
-
-	projectLatLngs: function() {	
+	projectLatLngs: function() {
+		this._set.clear();	
 		if (this._path) this._path.remove();
 		
 		this._path = this._paper.path(this.getPathString())
 			.attr(this._attr)
 			.toBack();
+
+		this._set.push(this._path);
 	},
 
 	getPathString: function() {
@@ -201,18 +213,14 @@ R.Polygon = R.Layer.extend({
 		this._attr = attr || {'fill': 'rgba(255, 0, 0, 0.5)', 'stroke': '#f00', 'stroke-width': 2};
 	},
 
-	onRemove: function(map) {
-		R.Layer.prototype.onRemove.call(this, map);
-		
-		if(this._path) this._path.remove();
-	},
-
-	projectLatLngs: function() {	
+	projectLatLngs: function() {
 		if (this._path) this._path.remove();
 		
 		this._path = this._paper.path(this.getPathString())
 			.attr(this._attr)
 			.toBack();
+
+		this._set.push(this._path);
 	},
 
 	getPathString: function() {
@@ -402,13 +410,51 @@ R.BezierAnim = R.Layer.extend({
 	}
 });
 
+R.FeatureGroup = L.FeatureGroup.extend({
+	initialize: function(layers, options) {
+		L.FeatureGroup.prototype.initialize.call(this, layers, options);
+	},
+
+	animate: function(attr, ms, easing, callback) {
+		this._iterateLayers(function(layer) {
+			layer.animate(attr, ms, easing, callback);
+		});
+	},
+
+	onAdd: function(map) {
+		L.FeatureGroup.prototype.onAdd.call(this,map);
+
+		this._set = this._map._paper.set();
+
+		for(i in this._layers) {
+			this._set.push(this._layers[i]._set);
+		}
+	},
+
+	hover: function(h_in, h_out, c_in, c_out) {
+		this._iterateLayers(function(layer) {
+			layer.hover(h_in, h_out, c_in, c_out);
+		});
+
+		return this;
+	},
+
+	attr: function(name, value) {
+		this._iterateLayers(function(layer) {
+			layer.attr(name, value);
+		});
+		
+		return this;
+	}
+});
+
 /*
  * Contains L.MultiPolyline and L.MultiPolygon layers.
  */
 
 (function () {
 	function createMulti(Klass) {
-		return L.FeatureGroup.extend({
+		return R.FeatureGroup.extend({
 			initialize: function (latlngs, options) {
 				this._layers = {};
 				this._options = options;
@@ -439,13 +485,13 @@ R.BezierAnim = R.Layer.extend({
 	R.MultiPolygon = createMulti(R.Polygon);
 }());
 
-R.GeoJSON = L.FeatureGroup.extend({
+R.GeoJSON = R.FeatureGroup.extend({
 	initialize: function (geojson, options) {
 		L.Util.setOptions(this, options);
 
 		this._geojson = geojson;
 		this._layers = {};
-
+		
 		if (geojson) {
 			this.addGeoJSON(geojson);
 		}
@@ -496,7 +542,7 @@ L.Util.extend(R.GeoJSON, {
 				layer = pointToLayer ? pointToLayer(latlng) : new R.Marker(latlng);
 				layers.push(layer);
 			}
-			return new L.FeatureGroup(layers);
+			return new R.FeatureGroup(layers);
 
 		case 'LineString':
 			latlngs = this.coordsToLatLngs(coords);
@@ -519,7 +565,7 @@ L.Util.extend(R.GeoJSON, {
 				layer = this.geometryToLayer(geometry.geometries[i], pointToLayer);
 				layers.push(layer);
 			}
-			return new L.FeatureGroup(layers);
+			return new R.FeatureGroup(layers);
 
 		default:
 			throw new Error('Invalid GeoJSON object.');
