@@ -8,18 +8,15 @@ R.Polyline = R.Layer.extend({
 		this._attr = attr || {'fill': '#000', 'stroke': '#000'};
 	},
 
-	onRemove: function(map) {
-		R.Layer.prototype.onRemove.call(this, map);
-		
-		if(this._path) this._path.remove();
-	},
-
-	projectLatLngs: function() {	
+	projectLatLngs: function() {
+		this._set.clear();	
 		if (this._path) this._path.remove();
 		
 		this._path = this._paper.path(this.getPathString())
 			.attr(this._attr)
 			.toBack();
+
+		this._set.push(this._path);
 	},
 
 	getPathString: function() {
