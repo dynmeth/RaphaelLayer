@@ -16,6 +16,10 @@ R.Layer = L.Class.extend({
 	onRemove: function(map) {
 		map.off('viewreset', this.projectLatLngs, this);
 		this._map = null;
+		this._set.forEach(function(item) {
+			item.remove();
+		}, this);
+		this._set.clear();
 	},
 
 	projectLatLngs: function() {
