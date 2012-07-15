@@ -6,12 +6,6 @@ R.Bezier = R.Layer.extend({
 		this._attr = attr;
 	},
 
-	onRemove: function (map) {
-		R.Layer.prototype.onRemove.call(this, map);
-		
-		if(this._path) this._path.remove();
-	},
-
 	projectLatLngs: function() {
 		if(this._path) this._path.remove();
 		
@@ -22,6 +16,8 @@ R.Bezier = R.Layer.extend({
 		this._path = this._paper.path('M' + start.x + ' ' + start.y + 'Q' + cp.x + ' ' + cp.y + ' ' + end.x + ' ' + end.y)
 			.attr(this._attr)
 			.toBack();
+
+		this._set.push(this._path);
 	},
 
 	getControlPoint: function(start, end) {

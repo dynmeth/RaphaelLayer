@@ -109,12 +109,6 @@ R.Marker = R.Layer.extend({
 		this._attr = (typeof pathString == 'object' ? pathString : (attr ? attr : {'fill': '#000'}));
 	},
 
-	onRemove: function (map) {
-		R.Layer.prototype.onRemove.call(this, map);
-
-		if(this._path) this._path.remove();
-	},
-
 	projectLatLngs: function() {		
 		if (this._path) this._path.remove();
 
@@ -125,6 +119,8 @@ R.Marker = R.Layer.extend({
 			.attr(this._attr)
 			.translate(p.x - 1.05*r.width, p.y - 1.15*r.height)
 			.toFront();
+
+		this._set.push(this._path);
 	}
 });
 
@@ -291,12 +287,6 @@ R.Bezier = R.Layer.extend({
 		this._attr = attr;
 	},
 
-	onRemove: function (map) {
-		R.Layer.prototype.onRemove.call(this, map);
-		
-		if(this._path) this._path.remove();
-	},
-
 	projectLatLngs: function() {
 		if(this._path) this._path.remove();
 		
@@ -307,6 +297,8 @@ R.Bezier = R.Layer.extend({
 		this._path = this._paper.path('M' + start.x + ' ' + start.y + 'Q' + cp.x + ' ' + cp.y + ' ' + end.x + ' ' + end.y)
 			.attr(this._attr)
 			.toBack();
+
+		this._set.push(this._path);
 	},
 
 	getControlPoint: function(start, end) {

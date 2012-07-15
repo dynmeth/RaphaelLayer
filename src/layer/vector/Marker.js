@@ -7,12 +7,6 @@ R.Marker = R.Layer.extend({
 		this._attr = (typeof pathString == 'object' ? pathString : (attr ? attr : {'fill': '#000'}));
 	},
 
-	onRemove: function (map) {
-		R.Layer.prototype.onRemove.call(this, map);
-
-		if(this._path) this._path.remove();
-	},
-
 	projectLatLngs: function() {		
 		if (this._path) this._path.remove();
 
@@ -23,5 +17,7 @@ R.Marker = R.Layer.extend({
 			.attr(this._attr)
 			.translate(p.x - 1.05*r.width, p.y - 1.15*r.height)
 			.toFront();
+
+		this._set.push(this._path);
 	}
 });
