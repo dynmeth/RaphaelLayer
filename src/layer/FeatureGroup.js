@@ -4,7 +4,7 @@ R.FeatureGroup = L.FeatureGroup.extend({
 	},
 
 	animate: function(attr, ms, easing, callback) {
-		this._iterateLayers(function(layer) {
+		this.eachLayer(function(layer) {
 			layer.animate(attr, ms, easing, callback);
 		});
 	},
@@ -20,7 +20,7 @@ R.FeatureGroup = L.FeatureGroup.extend({
 	},
 
 	hover: function(h_in, h_out, c_in, c_out) {
-		this._iterateLayers(function(layer) {
+		this.eachLayer(function(layer) {
 			layer.hover(h_in, h_out, c_in, c_out);
 		});
 
@@ -28,7 +28,7 @@ R.FeatureGroup = L.FeatureGroup.extend({
 	},
 
 	attr: function(name, value) {
-		this._iterateLayers(function(layer) {
+		this.eachLayer(function(layer) {
 			layer.attr(name, value);
 		});
 		
