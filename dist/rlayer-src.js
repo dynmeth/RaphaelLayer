@@ -17,9 +17,11 @@ if (typeof exports != 'undefined') {
 	window.R = R;
 }
 
-R.version = '0.1.1';
+R.version = '0.1.2';
 
 R.Layer = L.Class.extend({
+	includes: L.Mixin.Events,
+	
 	initialize: function(options) {
 		
 	},
@@ -164,7 +166,6 @@ R.Pulse = R.Layer.extend({
 });
 
 R.Polyline = R.Layer.extend({
-	includes: L.Mixin.Events,
 	
 	initialize: function(latlngs, attr, options) {
 		R.Layer.prototype.initialize.call(this, options);
@@ -194,7 +195,6 @@ R.Polyline = R.Layer.extend({
 });
 
 R.Polygon = R.Layer.extend({
-	includes: L.Mixin.Events,
 	
 	initialize: function(latlngs, attr, options) {
 		R.Layer.prototype.initialize.call(this, options);
