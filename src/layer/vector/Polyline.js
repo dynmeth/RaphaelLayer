@@ -1,5 +1,4 @@
 R.Polyline = R.Layer.extend({
-	includes: L.Mixin.Events,
 	
 	initialize: function(latlngs, attr, options) {
 		R.Layer.prototype.initialize.call(this, options);

@@ -1,4 +1,6 @@
 R.Layer = L.Class.extend({
+	includes: L.Mixin.Events,
+	
 	initialize: function(options) {
 		
 	},
