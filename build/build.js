@@ -51,11 +51,11 @@ exports.uglify = function(code) {
 };
 
 exports.combineFiles = function(files) {
-	var content = '(function() {\n\n';
+	var content = '(function(L) {\n\n';
 	for(var i=0, len=files.length; i<len; i++) {
 		content += fs.readFileSync(files[i], 'utf8') + '\r\n\r\n';
 	}
-	return content + '\n\n}());';
+	return content + '\n\n}(L));';
 }
 
 exports.save = function(savePath, compressed) {
