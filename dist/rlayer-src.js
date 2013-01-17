@@ -1,3 +1,10 @@
+/*
+ RaphaelLayer, a JavaScript library for overlaying Raphael objects onto Leaflet interactive maps. http://dynmeth.github.com/RaphaelLayer
+ (c) 2012-2013, David Howell, Dynamic Methods Pty Ltd
+
+ Version 0.1.3
+*/
+
 (function() {
 
 var R, originalR;
@@ -17,7 +24,7 @@ if (typeof exports != 'undefined') {
 	window.R = R;
 }
 
-R.version = '0.1.2';
+R.version = '0.1.3';
 
 R.Layer = L.Class.extend({
 	includes: L.Mixin.Events,
