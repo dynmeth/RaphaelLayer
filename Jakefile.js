@@ -1,7 +1,8 @@
 var build = require('./build/build.js'),
-	lint = require('./build/hint.js');
+	lint = require('./build/hint.js'),
+	fs = require('fs');
 
-var COPYRIGHT = '';
+var COPYRIGHT = fs.readFileSync('src/copyright.js', 'utf8');
 
 desc('Check Raphael Layer source for errors with JSHint');
 task('lint', function() {
