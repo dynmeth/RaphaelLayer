@@ -1,5 +1,5 @@
 R.Pulse = R.Layer.extend({
-	initialize: function(latlng, radius, attr, pulseAttr, options) {
+	initialize: function(latlng, radius, attr, pulseAttr, repeat, options) {
 		R.Layer.prototype.initialize.call(this, options);
 
 		this._latlng = latlng;
@@ -9,7 +9,7 @@ R.Pulse = R.Layer.extend({
 			'stroke-width': 3,
 			'stroke': this._attr.stroke
 		});
-		this._repeat = 3;
+		this._repeat = (typeof repeat == 'object' ? repeat : 3);
 	},
 
 	onRemove: function (map) {
