@@ -50,10 +50,10 @@ R.Layer = L.Class.extend({
 L.Map.include({
 	_initRaphaelRoot: function () {
 		if (!this._raphaelRoot) {
-			this._raphaelRoot = this._panes.overlayPane;
+			this._raphaelRoot = document.createElement("div");
+			this._panes.overlayPane.appendChild(this._raphaelRoot);
 			this._paper = Raphael(this._raphaelRoot);
-
-			this.on('moveend', this._updateRaphaelViewport);
+			this.on('move', this._updateRaphaelViewport);
 			this._updateRaphaelViewport();
 		}
 	},
