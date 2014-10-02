@@ -10,8 +10,9 @@ R.FeatureGroup = L.FeatureGroup.extend({
 	},
 
 	onAdd: function(map) {
-		L.FeatureGroup.prototype.onAdd.call(this,map);
-
+		L.FeatureGroup.prototype.onAdd.call(this, map);
+		this._map = map;
+		this._map._initRaphaelRoot();
 		this._set = this._map._paper.set();
 
 		for(i in this._layers) {
