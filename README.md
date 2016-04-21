@@ -1,15 +1,15 @@
 # RaphaelLayer
-RaphaelLayer is the combination of [Leaflet](http://leaflet.cloudmade.com) and [Raphael](http://raphaeljs.com) to allow a Raphael's `paper` object to overlay a Leaflet's `map` object.
+RaphaelLayer is the combination of [Leaflet](http://leaflet.cloudmade.com) and [Raphael](http://dmitrybaranovskiy.github.io/raphael/) to allow a Raphael's `paper` object to overlay a Leaflet's `map` object.
 
 ## Why? Leaflet already has an SVG layer.
-[Raphael](http://raphaeljs.com) is great for handling SVG animations. [Leaflet](http://leaflet.cloudmade.com) is great for custom mapping. By combining Raphael's animations with Leaflet's mapping, you can produce some powerful visualisations.
+[Raphael](http://dmitrybaranovskiy.github.io/raphael/) is great for handling SVG animations. [Leaflet](http://leaflet.cloudmade.com) is great for custom mapping. By combining Raphael's animations with Leaflet's mapping, you can produce some powerful visualisations.
 
 Leaflet's Path SVG layer is good, however it is difficult to do advanced animations with it.
 
 ## Dependencies
 RaphaelLayer has two dependencies:
 
- 1. [Raphael](http://raphaeljs.com)
+ 1. [Raphael](http://dmitrybaranovskiy.github.io/raphael/)
  2. [Leaflet](http://leaflet.cloudmade.com)
 
 ## Using
@@ -20,7 +20,7 @@ We've followed the naming convention of Leaflet by using the prefix `R.`. For ex
 ```
 map.addLayer(new R.Marker(latlng));
 ```
-To modify the marker's attributes, such as fill, stroke etc, just pass regular [Raphael style attributes](http://raphaeljs.com/reference.html#Element.attr) through like this:
+To modify the marker's attributes, such as fill, stroke etc, just pass regular [Raphael style attributes](http://dmitrybaranovskiy.github.io/raphael/reference.html#Element.attr) through like this:
 
 ```
 map.addLayer(new R.Marker(latlng, {'fill': '#fff', 'stroke': '#000'));
